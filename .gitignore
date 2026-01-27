@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Generated output files
+result/*
+!result/.gitkeep
+*.xlsx
+!documents/template.xlsx
+
+# Google credentials (sensitive)
+credentials.json
+*.pem
+*.key
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# BMAD framework and output
+_bmad/
+_bmad-output/
+
+# AI agent configurations
+.claude/
+.cursor/
+.aider*
+.continue/
+.copilot/
+CLAUDE.md
+.claudeignore
