@@ -1,0 +1,24 @@
+{
+  "name": "iron-calc-api",
+  "version": "1.0.0",
+  "description": "Dynamic Excel calculation API using IronCalc",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "@ironcalc/nodejs": "^0.7.1",
+    "express": "^4.22.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11",
+    "vitest": "^1.0.0"
+  },
+  "author": "sid",
+  "license": "ISC"
+}
