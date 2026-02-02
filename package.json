@@ -13,6 +13,7 @@
   "dependencies": {
     "@ironcalc/nodejs": "^0.7.1",
     "express": "^4.22.1",
+    "googleapis": "^171.0.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

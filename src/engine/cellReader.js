@@ -36,19 +36,6 @@ export function isFormulaCell(model, sheet, row, col) {
 }
 
 /**
- * Helper: Convert column letter to number (A=1, B=2, etc.)
- * @param {string} letter - Column letter(s)
- * @returns {number} - Column number
- */
-export function columnToNumber(letter) {
-  let result = 0;
-  for (let i = 0; i < letter.length; i++) {
-    result = result * 26 + (letter.charCodeAt(i) - 64);
-  }
-  return result;
-}
-
-/**
  * Coerce a string value from IronCalc to appropriate JS type
  * @param {string} value - String value from getFormattedCellValue()
  * @returns {any} - Coerced value (number, boolean, null, or string)

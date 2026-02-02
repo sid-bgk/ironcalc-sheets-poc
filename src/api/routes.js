@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { loadWorkbook } from '../engine/workbookLoader.js';
 import { executeCalculation, getRequiredInputNames } from '../engine/calculator.js';
+import { importSpreadsheet, checkAuthStatus } from '../services/googleImport.js';
 
 const router = Router();
 let model = null;
@@ -61,6 +62,92 @@ router.post('/api/v1/calculate/dscr', (req, res) => {
     res.status(500).json({
       error: {
         code: 'CALCULATION_ERROR',
+        message: error.message
+      }
+    });
+  }
+});
+
+/**
+ * POST /api/v1/import
+ *
+ * Request body: { "spreadsheetId": "<google-spreadsheet-id>" }
+ * Response: { "modelId": "...", "status": "ready", "path": "..." }
+ */
+router.post('/api/v1/import', async (req, res) => {
+  console.log(`[routes] API called: POST /api/v1/import`);
+
+  try {
+    const { spreadsheetId } = req.body;
+
+    // Validate spreadsheetId is provided
+    if (!spreadsheetId || typeof spreadsheetId !== 'string') {
+      console.log(`[routes] Invalid request - missing or invalid spreadsheetId`);
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_REQUEST',
+          message: 'Request body must contain "spreadsheetId" string'
+        }
+      });
+    }
+
+    // Log truncated ID for debugging (security - don't log full ID)
+    const truncatedId = spreadsheetId.length > 10
+      ? `${spreadsheetId.substring(0, 10)}...`
+      : spreadsheetId;
+    console.log(`[routes] Importing spreadsheet: ${truncatedId}`);
+
+    // Import the spreadsheet
+    const result = await importSpreadsheet(spreadsheetId);
+
+    console.log(`[routes] Import successful: modelId=${result.modelId}`);
+    res.json(result);
+  } catch (error) {
+    console.error(`[routes] Import error:`, error.message);
+
+    // Handle structured import errors
+    if (error.code && error.code.startsWith('IMPORT_FAILED')) {
+      return res.status(error.statusCode || 500).json({
+        error: {
+          code: error.code,
+          subcode: error.subcode,
+          message: error.message
+        }
+      });
+    }
+
+    // Generic error
+    res.status(500).json({
+      error: {
+        code: 'IMPORT_FAILED',
+        message: error.message
+      }
+    });
+  }
+});
+
+/**
+ * GET /api/v1/import/health
+ *
+ * Check if Google API credentials are configured
+ * Response: { "status": "ok"|"error", "auth": { "configured": boolean, "message": string } }
+ */
+router.get('/api/v1/import/health', async (req, res) => {
+  console.log(`[routes] API called: GET /api/v1/import/health`);
+
+  try {
+    const authStatus = await checkAuthStatus();
+
+    res.json({
+      status: authStatus.configured ? 'ok' : 'error',
+      auth: authStatus
+    });
+  } catch (error) {
+    console.error(`[routes] Health check error:`, error.message);
+    res.status(500).json({
+      status: 'error',
+      auth: {
+        configured: false,
         message: error.message
       }
     });

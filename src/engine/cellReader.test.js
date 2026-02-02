@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { coerceValue, columnToNumber } from './cellReader.js';
+import { coerceValue } from './cellReader.js';
 
 describe('coerceValue', () => {
   describe('empty/null handling', () => {
@@ -93,16 +93,4 @@ describe('coerceValue', () => {
     });
   });
 });
-
-describe('columnToNumber', () => {
-  it('converts single letter columns', () => {
-    expect(columnToNumber('A')).toBe(1);
-    expect(columnToNumber('B')).toBe(2);
-    expect(columnToNumber('Z')).toBe(26);
-  });
-
-  it('converts double letter columns', () => {
-    expect(columnToNumber('AA')).toBe(27);
-    expect(columnToNumber('AK')).toBe(37);
-  });
-});
+// Note: columnToNumber removed - use colToNum from namedRanges.js (tested in namedRanges.test.js)
